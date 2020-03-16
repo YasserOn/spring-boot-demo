@@ -1,5 +1,6 @@
 package com.xkcoding.cache.redis.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.cache.CacheManager;
@@ -9,13 +10,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-import java.io.Serializable;
+import org.springframework.data.redis.serializer.*;
 
 /**
  * <p>
@@ -39,13 +35,32 @@ public class RedisConfig {
      * 默认情况下的模板只能支持RedisTemplate<String, String>，也就是只能存入字符串，因此支持序列化
      */
     @Bean
-    public RedisTemplate<String, Serializable> redisCacheTemplate(LettuceConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Serializable> template = new RedisTemplate<>();
+    public <V> RedisTemplate<String, V> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, V> template = new RedisTemplate<>();
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         template.setConnectionFactory(redisConnectionFactory);
+
+
+        RedisSerializer<?> jacksonSerializer = jacksonSerializer();
+
+        template.setKeySerializer(RedisSerializer.string());
+        template.setHashKeySerializer(jacksonSerializer);
+        template.setDefaultSerializer(jacksonSerializer);
+
+        template.afterPropertiesSet();
         return template;
     }
+
+    @Bean
+    public RedisSerializer<?> jacksonSerializer() {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Jackson2JsonRedisSerializer<?> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
+        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
+        return jackson2JsonRedisSerializer;
+    }
+
 
     /**
      * 配置使用注解的时候缓存配置，默认是序列化反序列化的形式，加上此配置则为 json 形式
