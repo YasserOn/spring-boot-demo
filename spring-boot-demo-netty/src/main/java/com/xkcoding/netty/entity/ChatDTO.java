@@ -1,15 +1,13 @@
 package com.xkcoding.netty.entity;
 
-import lombok.*;
+import lombok.Data;
+
+import java.io.Serializable;
 
 @Data
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class ChatDTO {
-    private String userName;
+public class ChatDTO implements Serializable {
+    private String username;
 
-    private String content;
+    private String message;
 
 }
