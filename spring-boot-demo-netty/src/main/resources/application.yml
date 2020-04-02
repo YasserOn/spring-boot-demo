@@ -1,0 +1,14 @@
+socketio:
+  allowCustomRequests: true
+  bossCount: 1
+  host: localhost
+  maxFramePayloadLength: 1048576
+  maxHttpContentLength: 1048576
+  pingInterval: 25000
+  pingTimeout: 6000000
+  port: 7777
+  upgradeTimeout: 1000000
+  workCount: 100
+
+server:
+  port: 19999
