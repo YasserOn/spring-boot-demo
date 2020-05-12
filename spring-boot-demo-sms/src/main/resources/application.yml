@@ -1,0 +1,21 @@
+sms:
+  activePlatform: ali
+  ronglian:
+    appId: xxxxx
+    accountSid: xxxxx
+    accountToken: xxxxx
+    template:
+      verifyCode: xxxxx
+  ali:
+    accessKeyId: xxxxx
+    accessKeySecret: xxxxx
+    signName: xxxxx
+    template:
+      verifyCode:
+        code: xxxxx
+        paramList:
+          - xxxxx
+spring:
+  freemarker:
+    checkTemplateLocation: false
+
