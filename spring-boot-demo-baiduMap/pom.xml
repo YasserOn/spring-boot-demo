@@ -38,7 +38,7 @@
     <!-- hutool-http -->
     <dependency>
       <groupId>cn.hutool</groupId>
-      <artifactId>hutool-http</artifactId>
+      <artifactId>hutool-all</artifactId>
     </dependency>
 
   </dependencies>
