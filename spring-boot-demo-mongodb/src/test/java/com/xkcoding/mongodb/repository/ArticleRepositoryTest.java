@@ -1,6 +1,5 @@
 package com.xkcoding.mongodb.repository;
 
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.json.JSONUtil;
@@ -18,6 +17,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,15 +46,17 @@ public class ArticleRepositoryTest extends SpringBootDemoMongodbApplicationTests
     @Autowired
     private Snowflake snowflake;
 
+
+
     /**
      * 测试新增
      */
     @Test
     public void testSave() {
-        Article article = new Article(1L, RandomUtil.randomString(20), RandomUtil.randomString(150), DateUtil.date(), DateUtil
-                .date(), 0L, 0L);
+        Article article = new Article(snowflake.nextId(), RandomUtil.randomString(20), RandomUtil.randomString(150), LocalDateTime.now(), LocalDateTime.now(), 0L, 0L,false);
         articleRepo.save(article);
         log.info("【article】= {}", JSONUtil.toJsonStr(article));
+        System.out.println("id"+article.getId());
     }
 
     /**
@@ -63,8 +66,7 @@ public class ArticleRepositoryTest extends SpringBootDemoMongodbApplicationTests
     public void testSaveList() {
         List<Article> articles = Lists.newArrayList();
         for (int i = 0; i < 10; i++) {
-            articles.add(new Article(snowflake.nextId(), RandomUtil.randomString(20), RandomUtil.randomString(150), DateUtil
-                    .date(), DateUtil.date(), 0L, 0L));
+            articles.add(new Article(snowflake.nextId(), RandomUtil.randomString(20), RandomUtil.randomString(150), LocalDateTime.now(), LocalDateTime.now(), 0L, 0L,false));
         }
         articleRepo.saveAll(articles);
 
@@ -80,7 +82,7 @@ public class ArticleRepositoryTest extends SpringBootDemoMongodbApplicationTests
     public void testUpdate() {
         articleRepo.findById(1L).ifPresent(article -> {
             article.setTitle(article.getTitle() + "更新之后的标题");
-            article.setUpdateTime(DateUtil.date());
+            article.setUpdateTime(LocalDateTime.now());
             articleRepo.save(article);
             log.info("【article】= {}", JSONUtil.toJsonStr(article));
         });
@@ -91,9 +93,6 @@ public class ArticleRepositoryTest extends SpringBootDemoMongodbApplicationTests
      */
     @Test
     public void testDelete() {
-        // 根据主键删除
-        articleRepo.deleteById(1L);
-
         // 全部删除
         articleRepo.deleteAll();
     }
@@ -138,10 +137,7 @@ public class ArticleRepositoryTest extends SpringBootDemoMongodbApplicationTests
         Page<Article> all = articleRepo.findAll(pageRequest);
         log.info("【总页数】= {}", all.getTotalPages());
         log.info("【总条数】= {}", all.getTotalElements());
-        log.info("【当前页数据】= {}", JSONUtil.toJsonStr(all.getContent()
-                .stream()
-                .map(article -> "文章标题：" + article.getTitle() + "点赞数：" + article.getThumbUp() + "更新时间：" + article.getUpdateTime())
-                .collect(Collectors.toList())));
+        log.info("【当前页数据】= {}", JSONUtil.toJsonStr(new ArrayList<>(all.getContent())));
     }
 
     /**

@@ -2,9 +2,13 @@ package com.xkcoding.mongodb;
 
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
+import com.xkcoding.mongodb.core.SoftDeleteMongoRepositoryFactoryBean;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 /**
  * <p>
@@ -20,10 +24,17 @@ import org.springframework.context.annotation.Bean;
  * @modified: yangkai.shen
  */
 @SpringBootApplication
+@EnableMongoRepositories(repositoryFactoryBeanClass = SoftDeleteMongoRepositoryFactoryBean.class)
 public class SpringBootDemoMongodbApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(SpringBootDemoMongodbApplication.class, args);
+    }
+
+    @Bean
+    public static BeanFactoryPostProcessor removeTomcatWebServerCustomizer() {
+        return (beanFactory) ->
+            ((DefaultListableBeanFactory)beanFactory).removeBeanDefinition("tomcatWebServerFactoryCustomizer");
     }
 
     @Bean
