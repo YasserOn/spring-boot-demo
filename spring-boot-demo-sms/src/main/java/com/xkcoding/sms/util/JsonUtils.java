@@ -4,11 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xkcoding.sms.RoomCheckInReq;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class JsonUtils {
     private static ObjectMapper MAPPER = new ObjectMapper();
@@ -69,5 +68,15 @@ public class JsonUtils {
 
     public static List<String> toStringList(String json) {
         return toObject(json, STRING_LIST_REFERENCE);
+    }
+
+    public static void main(String[] args) {
+        ArrayList<Object> list = new ArrayList<>();
+        RoomCheckInReq check = new RoomCheckInReq();
+        check.setId(123123)
+            .setDate(new Date());
+        list.add(check);
+        String s = JsonUtils.toJson(list);
+        System.out.println(s);
     }
 }

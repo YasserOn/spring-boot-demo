@@ -7,6 +7,8 @@ spring:
     # 连接超时时间（记得添加单位，Duration）
     timeout: 10000ms
     port: 6379
+    password: H2h2828
+    database: 2
 
 logging:
   level:

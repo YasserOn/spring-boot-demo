@@ -13,8 +13,9 @@
 package com.xkcoding.sms.util.ronglian;
 
 
-import com.hongxin.qianchao.utils.ronglian.encoder.BASE64Decoder;
-import com.hongxin.qianchao.utils.ronglian.encoder.BASE64Encoder;
+
+import com.xkcoding.sms.util.ronglian.encoder.BASE64Decoder;
+import com.xkcoding.sms.util.ronglian.encoder.BASE64Encoder;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
