@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -45,12 +45,12 @@ public class Article {
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 点赞数量
@@ -62,4 +62,15 @@ public class Article {
      */
     private Long visits;
 
+
+    private Boolean deleted;
+
+    public Article(String title, String content, LocalDateTime createTime, LocalDateTime updateTime, Long thumbUp, Long visits) {
+        this.title = title;
+        this.content = content;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+        this.thumbUp = thumbUp;
+        this.visits = visits;
+    }
 }

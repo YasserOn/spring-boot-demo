@@ -1,14 +1,12 @@
 package com.xkcoding.netty.config;
 
-import com.corundumstudio.socketio.AuthorizationListener;
-import com.corundumstudio.socketio.SocketConfig;
 import com.corundumstudio.socketio.SocketIOServer;
+import com.corundumstudio.socketio.annotation.SpringAnnotationScanner;
 import com.corundumstudio.socketio.protocol.JacksonJsonSupport;
 import io.netty.channel.epoll.Epoll;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,6 +18,7 @@ public class SocketIOConfig implements CommandLineRunner {
 
     @Autowired
     private SocketIOServer server;
+
 
     /**
      * 以下配置在上面的application.properties中已经注明
@@ -47,6 +46,11 @@ public class SocketIOConfig implements CommandLineRunner {
         config.setBossThreads(1);
         config.setWorkerThreads(1);
         return new SocketIOServer(config);
+    }
+
+    @Bean
+    public BeanPostProcessor socketIOBeanPostProcessor(SocketIOServer server) {
+        return new SpringAnnotationScanner(server);
     }
 
     @Override

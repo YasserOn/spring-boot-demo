@@ -38,3 +38,4 @@ logs/
 
 ### VS CODE ###
 .vscode/
+/spring-boot-demo-netty/src/main/java/com/xkcoding/netty/

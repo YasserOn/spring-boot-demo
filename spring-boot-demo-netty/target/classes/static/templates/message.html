@@ -5,6 +5,8 @@
   <title>Insert title here</title>
   <script type="javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="javascript" src="../js/socket.io.js"></script>
+<!--  <script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>-->
+<!--  <script src="https://cdn.bootcss.com/socket.io/2.1.0/socket.io.js"></script>-->
   <style>
     body {
       padding: 20px;
@@ -50,7 +52,7 @@
     output('<span class="connect-msg">Client has connected to the server!</span>');
   });
   socket.on('chatevent', function (data) {
-    output('<span class="username-msg">' + data.userName + ':</span> ' + data.message);
+    output('<span class="username-msg">' + data.username + ':</span> ' + data.message);
   });
   socket.on('disconnect', function () {
     output('<span class="disconnect-msg">The client has disconnected!</span>');
@@ -60,11 +62,17 @@
     socket.disconnect();
   }
 
+  function getJsonData() {
+    var data = {
+      "username": $("#name").val(),
+      "message": $("#msg").val()
+    }
+    return data;
+  }
+
   function sendMessage() {
-    var userName = $("#name").val()
-    var message = $("#msg").val();
+    socket.emit("chatevent",  JSON.stringify(getJsonData()));
     $("#msg").val('');
-    socket.emit("chatevent", {userName: userName, message: message});
   }
 
   function output(message) {

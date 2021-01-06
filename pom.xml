@@ -68,6 +68,7 @@
     <module>spring-boot-demo-ratelimit-redis</module>
     <module>spring-boot-demo-elasticsearch-rest-high-level-client</module>
       <module>spring-boot-demo-sms</module>
+    <module>spring-boot-demo-excel</module>
       <module>spring-boot-demo-baiduMap</module>
       <module>spring-boot-demo-cache-loading_cache</module>
       <module>spring-boot-demo-generateDoc</module>

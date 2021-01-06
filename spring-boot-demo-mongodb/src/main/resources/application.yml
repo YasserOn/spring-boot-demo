@@ -1,9 +1,15 @@
+
 spring:
   data:
     mongodb:
       host: localhost
       port: 27017
       database: article_db
+      username: admin
+      password: password
+      authentication-database: admin
 logging:
   level:
     org.springframework.data.mongodb.core: debug
+server:
+  port: 15886
