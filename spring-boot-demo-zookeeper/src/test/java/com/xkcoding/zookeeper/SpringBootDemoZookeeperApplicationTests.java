@@ -2,6 +2,8 @@ package com.xkcoding.zookeeper;
 
 import com.xkcoding.zookeeper.annotation.ZooLock;
 import com.xkcoding.zookeeper.aspectj.ZooLockAspect;
+import com.xkcoding.zookeeper.lock.DistLock;
+import com.xkcoding.zookeeper.lock.ZKDistLock;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
@@ -17,9 +19,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+
 @Slf4j
+@SpringBootTest
+@RunWith(SpringRunner.class)
 public class SpringBootDemoZookeeperApplicationTests {
 
     public Integer getCount() {
@@ -63,7 +66,9 @@ public class SpringBootDemoZookeeperApplicationTests {
      */
     @Test
     public void testManualLock() throws InterruptedException {
-        IntStream.range(0, 10000).forEach(i -> executorService.execute(this::manualBuy));
+        for (int i = 0; i < 10000; i++) {
+            executorService.execute(this::manualBuy);
+        }
         TimeUnit.MINUTES.sleep(1);
         log.error("count值为{}", count);
     }
@@ -73,6 +78,25 @@ public class SpringBootDemoZookeeperApplicationTests {
         log.info("{} 正在出库。。。", userId);
         doBuy();
         log.info("{} 扣库存成功。。。", userId);
+    }
+
+    public void manualBuy1() {
+        log.info("try to buy sth.");
+        try {
+            DistLock orderLock = new ZKDistLock("/order", zkClient);
+            try {
+                orderLock.lock();
+                doBuy();
+                log.info("buy successfully!");
+            } finally {
+                orderLock.unlock();
+            }
+        } catch (Exception e) {
+            System.out.println("=====");
+            System.out.println(e.fillInStackTrace());
+            System.out.println("=====");
+            log.error("zk error");
+        }
     }
 
     public void manualBuy() {
@@ -89,6 +113,9 @@ public class SpringBootDemoZookeeperApplicationTests {
                 lock.release();
             }
         } catch (Exception e) {
+            System.out.println("=====");
+            System.out.println(e.fillInStackTrace());
+            System.out.println("=====");
             log.error("zk error");
         }
     }
